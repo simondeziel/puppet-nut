@@ -1,5 +1,5 @@
 [<%= @user %>]
-	password = <%= @password %>
+	password = <%= @password.unwrap %>
 <% if @upsmon -%>
 	upsmon <%= @upsmon %>
 <% else -%>
