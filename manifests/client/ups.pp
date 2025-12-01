@@ -37,7 +37,7 @@
 # @see puppet_defined_types::nut::client::upssched ::nut::client::upssched
 define nut::client::ups (
   String                                    $user,
-  String                                    $password,
+  Sensitive[String]                         $password,
   Optional[Tuple[String, Boolean, Boolean]] $certhost   = undef,
   Integer[0]                                $powervalue = 1,
   Enum['master', 'slave']                   $type       = $title ? {
