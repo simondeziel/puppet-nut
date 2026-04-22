@@ -1,6 +1,10 @@
 [<%= @ups %>]
-	driver = "<%= @driver %>"
-	port = "<%= @port %>"
+ driver = "<%= @driver %>"
+ port = "<%= @port %>"
 <% @extra.each_pair do |k,v| -%>
-	<%= k %> = "<%= v %>"
+<% if v == true -%>
+ <%= k %>
+<% else -%>
+ <%= k %> = "<%= v %>"
+<% end -%>
 <% end -%>
