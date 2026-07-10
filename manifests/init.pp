@@ -46,6 +46,10 @@
 # @param conf_dir Top-level configuration directory, usually `/etc/nut` or
 #   `/etc/ups`.
 # @param driver_packages Hash of driver types to the package that provides it.
+# @param driver_service_name Name of the driver controller service. The drivers
+#   run separately from `upsd` so they need their own restart on configuration
+#   changes; NUT >= 2.8 groups the per-UPS `nut-driver@` instances under
+#   `nut-driver.target`. Set to `undef` to not manage the driver service.
 # @param group The unprivileged group used to drop root privileges.
 # @param listen An array of hashes of interface addresses to listen on,
 #   optionally with a port.
@@ -94,6 +98,7 @@ class nut (
   String                                           $client_shutdowncmd    = $::nut::params::shutdown_command,
   Stdlib::Absolutepath                             $conf_dir              = $::nut::params::conf_dir,
   Hash[String, String]                             $driver_packages       = $::nut::params::driver_packages,
+  Optional[String]                                 $driver_service_name   = $::nut::params::driver_service_name,
   String                                           $group                 = $::nut::params::group,
   Optional[Array[Nut::Listen, 1]]                  $listen                = undef,
   Optional[Integer[1]]                             $maxage                = undef,
