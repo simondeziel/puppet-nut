@@ -22,6 +22,7 @@ class nut::params {
       $driver_packages     = {
         'netxml-ups' => 'nut-xml',
       }
+      $driver_service_name = undef
       $group               = 'nut'
       $http_server         = 'apache'
       $manage_vhost        = true
@@ -58,6 +59,7 @@ class nut::params {
         'snmp-ups'   => 'nut-snmp',
         'netxml-ups' => 'nut-xml',
       }
+      $driver_service_name   = undef
       $group                 = '_ups'
       $http_server           = 'httpd'
       $manage_vhost          = false
@@ -77,6 +79,7 @@ class nut::params {
       $client_service_name   = 'nut_upsmon'
       $conf_dir              = '/usr/local/etc/nut'
       $driver_packages       = {}
+      $driver_service_name   = undef
       $group                 = 'uucp'
       # $http_server           = ~
       $manage_vhost          = false
@@ -120,6 +123,12 @@ class nut::params {
       case $facts['os']['name'] {
         'Ubuntu': {
           $client_service_name = 'nut-client'
+          # NUT >= 2.8 (Ubuntu >= 22.04) replaced the single nut-driver.service with
+          # templated nut-driver@<ups>.service instances grouped under nut-driver.target
+          $driver_service_name = versioncmp($facts['os']['release']['major'], '22.04') >= 0 ? {
+            true    => 'nut-driver.target',
+            default => 'nut-driver',
+          }
         }
         default: {
           case $facts['os']['release']['major'] {
@@ -129,6 +138,12 @@ class nut::params {
             default: {
               $client_service_name = 'nut-monitor'
             }
+          }
+          # NUT >= 2.8 (Debian >= 12) replaced the single nut-driver.service with
+          # templated nut-driver@<ups>.service instances grouped under nut-driver.target
+          $driver_service_name = versioncmp($facts['os']['release']['major'], '12') >= 0 ? {
+            true    => 'nut-driver.target',
+            default => 'nut-driver',
           }
         }
       }
