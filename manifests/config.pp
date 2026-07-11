@@ -45,11 +45,13 @@ class nut::config {
     mode   => '0644',
   }
 
+  # Debian ships tmpfiles.d entries that (re)apply the runtime directory
+  # permissions (0770) on every service start, so managing the mode here
+  # just flip-flops with the packaging on each Puppet run.
   file { $statepath:
     ensure => directory,
     owner  => $user,
     group  => $group,
-    mode   => '0640',
   }
 
   ::concat { "${conf_dir}/ups.conf":
