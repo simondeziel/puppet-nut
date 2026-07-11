@@ -36,13 +36,15 @@ class nut::common::config {
     target  => "${conf_dir}/upsmon.conf",
   }
 
+  # On Debian 13 tmpfiles.d creates ${state_dir}/upssched (0770) on every
+  # service start: managing its mode or removing it just flip-flops with
+  # the packaging on each Puppet run, so leave the runtime directory alone.
   if $::nut::common::use_upssched {
 
     file { "${state_dir}/upssched":
       ensure => directory,
       owner  => $user,
       group  => $group,
-      mode   => '0640',
     }
 
     ::concat { "${conf_dir}/upssched.conf":
@@ -58,11 +60,6 @@ class nut::common::config {
       target  => "${conf_dir}/upssched.conf",
     }
   } else {
-
-    file { "${state_dir}/upssched":
-      ensure => absent,
-      force  => true,
-    }
 
     file { "${conf_dir}/upssched.conf":
       ensure => absent,

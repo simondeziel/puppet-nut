@@ -26,11 +26,13 @@ class nut::client::config {
 
   case $facts['os']['family'] {
     'Debian': {
+      # tmpfiles.d (re)applies the runtime directory permissions (0770) on
+      # every service start, so managing the mode here just flip-flops with
+      # the packaging on each Puppet run.
       file { $state_dir:
         ensure => directory,
         owner  => 0,
         group  => $group,
-        mode   => '0660',
       }
     }
     'OpenBSD': {
